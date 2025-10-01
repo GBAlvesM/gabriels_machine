@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Bases Numéricas</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nabla&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+</head>
+
+<body>
+    <div id="container" class="animate__animated animate__slideInUp">
+        <div id="central">
+            <h1>Gabriel's Machine</h1>
+            <input type="text" name="ipt_num" id="ipt_num" placeholder="Insira o valor a converter"><label
+                for="ipt_num"></label>
+            <select name="ipt_base" id="ipt_base">
+                <option value="1">Binário</option>
+                <option value="2">Decimal</option>
+                <option value="3">Octal</option>
+                <option value="4">Hexadecimal</option>
+            </select>
+            <div id="bases">
+                <h4>Converter para:</h4>
+                <input type="checkbox" id="convert_binario"> <label for="convert_binario">Binário</label>
+                <input type="checkbox" id="convert_octal"> <label for="convert_octal">Octal</label>
+                <input type="checkbox" id="convert_decimal"> <label for="convert_decimal">Decimal</label>
+                <input type="checkbox" id="convert_hexa"> <label for="convert_hexa">Hexadecimal</label>
+            </div>
+            <div id="botoes">
+                <button onclick="conversao()">Converter</button>
+                <button onclick="limpar()">Limpar</button>
+            </div>
+            <div id="resultados" style="display: none;" class="animate__animated animate__flipInX">
+                <div id="resBinario"></div>
+                <div id="resOctal"></div>
+                <div id="resDecimal"></div>
+                <div id="resHexa"></div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    function conversao() {
+        let inputValor = document.getElementById('ipt_num').value
+        let inputBase = document.getElementById('ipt_base').value
+
+
+        if (!validacao(inputValor, inputBase)) {
+            alert('Por favor, insira um número válido para a base selecionada.');
+            return;
+        }
+
+
+        resultados.style.display = "block"
+
+        // Converter o valor para decimal para poder fazer as seguintes conversões
+
+        var valorDecimal = parseInt(inputValor, inputBase === '4' ? 16 : inputBase === '3' ? 8 : inputBase === '1' ? 2 : 10);
+
+        if (document.getElementById('convert_hexa').checked) {
+            resHexa.innerHTML = `<p>Hexadecimal: ${valorDecimal.toString(16).toUpperCase()}</p>`
+        }
+
+        if (document.getElementById('convert_octal').checked) {
+            resOctal.innerHTML = `<p>Octal: ${valorDecimal.toString(8).toUpperCase()}</p>`
+        }
+
+        if (document.getElementById('convert_binario').checked) {
+            resBinario.innerHTML = `<p>Binário: ${valorDecimal.toString(2).toUpperCase()}</p>`
+        }
+
+        if (document.getElementById('convert_decimal').checked) {
+            resDecimal.innerHTML = `<p>Decimal: ${valorDecimal.toString(10).toUpperCase()}</p>`
+        }
+    }
+
+    function limpar() {
+        resultados.style.display = 'none'
+        ipt_num.value = ''
+
+        resBinario.innerHTML = ''
+        resDecimal.innerHTML = ''
+        resOctal.innerHTML = ''
+        resHexa.innerHTML = ''
+    }
+
+    function validacao(inputValor, inputBase) {
+
+        var validChars = ''; // String para armazenar os caracteres válidos
+
+        // Determina os caracteres válidos com base na base selecionada
+        if (inputBase == 2) {
+            validChars = '0123456789'; // Para base decimal, são válidos os dígitos de 0 a 9
+        } else if (inputBase == 4) {
+            validChars = '0123456789ABCDEFabcdef'; // Para base hexadecimal, são válidos os dígitos de 0 a 9 e as letras de A a F
+        } else if (inputBase == 3) {
+            validChars = '01234567'; // Para base octal, são válidos os dígitos de 0 a 7
+        } else if (inputBase == 1) {
+            validChars = '01'; // Para base binária, são válidos os dígitos 0 e 1
+        }
+
+        // Verifica se cada caractere da entrada está presente na lista de caracteres válidos
+        for (var i = 0; i < inputValor.length; i++) {
+            if (validChars.indexOf(inputValor[i]) === -1) { // Se o caractere não for encontrado na lista de caracteres válidos
+                return false; // Retorna falso indicando que a entrada é inválida
+            }
+        }
+        return true; // Retorna verdadeiro indicando que a entrada é válida
+    }
+
+</script>
+
+</html>
